@@ -84,6 +84,11 @@ export async function getSurah(id: number): Promise<SurahDetail> {
       englishNameTranslation: string;
       numberOfAyahs: number;
       revelationType: 'Meccan' | 'Medinan';
+      edition?: {
+        identifier: string;
+        language: string;
+        format: string;
+      };
       ayahs: Array<{
         number: number;
         numberInSurah: number;
@@ -98,9 +103,9 @@ export async function getSurah(id: number): Promise<SurahDetail> {
   });
 
   if (json && json.code === 200 && json.data && json.data.length >= 3) {
-    const arabicEdition = json.data[0];
-    const turkishEdition = json.data[1];
-    const audioEdition = json.data[2];
+    const arabicEdition = json.data.find(d => d.edition?.identifier === 'quran-uthmani') || json.data[0];
+    const turkishEdition = json.data.find(d => d.edition?.identifier === 'tr.vakfi') || json.data[1];
+    const audioEdition = json.data.find(d => d.edition?.identifier === 'ar.alafasy') || json.data[2];
 
     // Build a map of Turkish translations by their numberInSurah (verse number)
     const translationsMap = new Map<number, string>(
