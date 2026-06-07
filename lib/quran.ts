@@ -1,29 +1,20 @@
 import { Surah, SurahDetail, Ayah, SearchResult } from '@/types/quran';
 import { STATIC_SURAHS, OFFLINE_SURAH_DETAILS } from './quranData';
 
-const BISMILLAH_VARIANTS = [
-  "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-  "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-  "بسم الله الرحمن الرحيم"
-];
+const BISMILLAH_REGEX =
+  /^[\uFEFF\s]*(بِسْمِ|بسم)\s*[ٱا]للَّهِ?\s*[ٱا]لرَّحْمَٰنِ?\s*[ٱا]لرَّحِيمِ?/u;
 
 // Helper to clean Bismillah repetition from the first verse of any Surah (except Fatiha)
 export function cleanAyahText(text: string, surahNumber: number, ayahNumber: number): string {
-  if (surahNumber === 1) return text; // Fatiha must keep its Bismillah
+  if (!text) return text;
+
+  if (surahNumber === 1) return text.trim();
 
   if (surahNumber !== 9 && ayahNumber === 1) {
-    let cleaned = text.trim();
-
-    for (const bismillah of BISMILLAH_VARIANTS) {
-      if (cleaned.startsWith(bismillah)) {
-        cleaned = cleaned.slice(bismillah.length).trim();
-      }
-    }
-
-    return cleaned;
+    return text.replace(BISMILLAH_REGEX, "").trim();
   }
 
-  return text;
+  return text.trim();
 }
 
 // SSR-safe, error-resilient fetch wrapper
