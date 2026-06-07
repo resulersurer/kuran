@@ -1,24 +1,38 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Compass, ArrowRight, FileText } from 'lucide-react';
 import { SearchResult } from '@/types/quran';
 import { searchAyahs } from '@/lib/quran';
 import SearchBox from './SearchBox';
 
 export const SearchClient: React.FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get('q') || '';
+
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(queryParam);
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = useCallback(async (query: string) => {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) return;
+
     setIsLoading(true);
-    setSearchQuery(query);
+    setSearchQuery(trimmed);
     setHasSearched(true);
+
+    // Sync query parameter with URL
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('q', trimmed);
+    router.replace(`/search?${urlParams.toString()}`);
+
     try {
-      const searchResults = await searchAyahs(query);
+      const searchResults = await searchAyahs(trimmed);
       setResults(searchResults);
     } catch (error) {
       console.error('Error performing search:', error);
@@ -26,7 +40,17 @@ export const SearchClient: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [router]);
+
+  // Run initial search on mount if url query is present
+  useEffect(() => {
+    if (queryParam && queryParam.trim().length >= 2) {
+      const timerId = setTimeout(() => {
+        handleSearch(queryParam.trim());
+      }, 0);
+      return () => clearTimeout(timerId);
+    }
+  }, [queryParam, handleSearch]);
 
   const isArabicSearch = /[\u0600-\u06FF]/.test(searchQuery);
 
