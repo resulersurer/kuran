@@ -1,9 +1,18 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { Search, Compass } from 'lucide-react';
 import { Surah } from '@/types/quran';
 import { SurahCard } from './SurahCard';
+
+const QUICK_LINKS = [
+  { id: 1, name: 'Fatiha' },
+  { id: 2, name: 'Bakara' },
+  { id: 36, name: 'Yâsîn' },
+  { id: 55, name: 'Rahmân' },
+  { id: 67, name: 'Mülk' }
+];
 
 interface SurahListProps {
   surahs: Surah[];
@@ -37,36 +46,52 @@ export const SurahList: React.FC<SurahListProps> = ({ surahs }) => {
   return (
     <div className="w-full">
       {/* Search & Tabs Controls */}
-      <div className="flex flex-col gap-4 mb-8">
+      <div className="flex flex-col items-center gap-6 mb-12 max-w-2xl mx-auto select-none">
         {/* Search Input */}
-        <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
-            <Search className="w-5 h-5" />
+        <div className="relative w-full shadow-lg shadow-brand-emerald-950/[0.03] dark:shadow-brand-navy-950/40 rounded-2xl">
+          <div className="absolute inset-y-0 left-0 pl-4.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+            <Search className="w-5.5 h-5.5" />
           </div>
           <input
             type="text"
             placeholder="Sure adı veya numarası ile ara... (Örn: Fatiha, 36)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-brand-navy-card border border-slate-200/50 dark:border-slate-800/80 rounded-2xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40 focus:border-brand-emerald-600/60 dark:focus:border-brand-emerald-500/50 shadow-sm transition-all duration-200"
+            className="w-full pl-13 pr-12 py-4 bg-white dark:bg-brand-navy-card border border-slate-200/50 dark:border-slate-800/60 rounded-2xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40 focus:border-brand-emerald-600/60 dark:focus:border-brand-emerald-500/50 text-base transition-all duration-200"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               Temizle
             </button>
           )}
         </div>
 
+        {/* Quick Links */}
+        <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
+          <span className="text-slate-400 dark:text-slate-500 font-medium font-sans">
+            Hızlı Erişim:
+          </span>
+          {QUICK_LINKS.map((link) => (
+            <Link
+              key={link.id}
+              href={`/surah/${link.id}`}
+              className="px-3 py-1.5 bg-slate-100 dark:bg-brand-navy-card border border-slate-200/30 dark:border-slate-800/80 rounded-full text-slate-600 dark:text-slate-300 hover:text-brand-emerald-700 dark:hover:text-brand-emerald-400 hover:bg-brand-emerald-50 dark:hover:bg-brand-emerald-950/20 hover:border-brand-emerald-600/20 dark:hover:border-brand-emerald-500/20 transition-all duration-150 font-medium"
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
+
         {/* Tab Filters */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-200/40 dark:bg-slate-900/60 rounded-xl self-start">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-900/60 border border-slate-200/20 dark:border-slate-800/20 rounded-xl mt-2">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-4 py-2 text-xs font-semibold rounded-lg tracking-wide transition-all duration-200 ${
+            className={`px-5 py-2.5 text-xs font-bold rounded-lg tracking-wide transition-all duration-200 ${
               activeTab === 'all'
-                ? 'bg-white dark:bg-brand-navy-card text-brand-emerald-800 dark:text-brand-emerald-400 shadow-sm'
+                ? 'bg-white dark:bg-brand-navy-card text-brand-emerald-700 dark:text-brand-emerald-400 shadow-sm border border-slate-200/10'
                 : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -74,9 +99,9 @@ export const SurahList: React.FC<SurahListProps> = ({ surahs }) => {
           </button>
           <button
             onClick={() => setActiveTab('meccan')}
-            className={`px-4 py-2 text-xs font-semibold rounded-lg tracking-wide transition-all duration-200 ${
+            className={`px-5 py-2.5 text-xs font-bold rounded-lg tracking-wide transition-all duration-200 ${
               activeTab === 'meccan'
-                ? 'bg-white dark:bg-brand-navy-card text-brand-emerald-800 dark:text-brand-emerald-400 shadow-sm'
+                ? 'bg-white dark:bg-brand-navy-card text-brand-emerald-700 dark:text-brand-emerald-400 shadow-sm border border-slate-200/10'
                 : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
@@ -84,9 +109,9 @@ export const SurahList: React.FC<SurahListProps> = ({ surahs }) => {
           </button>
           <button
             onClick={() => setActiveTab('medinan')}
-            className={`px-4 py-2 text-xs font-semibold rounded-lg tracking-wide transition-all duration-200 ${
+            className={`px-5 py-2.5 text-xs font-bold rounded-lg tracking-wide transition-all duration-200 ${
               activeTab === 'medinan'
-                ? 'bg-white dark:bg-brand-navy-card text-brand-emerald-800 dark:text-brand-emerald-400 shadow-sm'
+                ? 'bg-white dark:bg-brand-navy-card text-brand-emerald-700 dark:text-brand-emerald-400 shadow-sm border border-slate-200/10'
                 : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >

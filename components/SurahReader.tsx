@@ -2,19 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, ChevronUp, BookOpen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronUp, BookOpen, Settings } from 'lucide-react';
 import { SurahDetail } from '@/types/quran';
 import { STATIC_SURAHS } from '@/lib/quranData';
 import { useReading } from './ReadingContext';
 import AyahCard from './AyahCard';
-import ReadingSettings from './ReadingSettings';
 
 interface SurahReaderProps {
   surah: SurahDetail;
 }
 
 export const SurahReader: React.FC<SurahReaderProps> = ({ surah }) => {
-  const { saveLastRead, preferences, isLoaded } = useReading();
+  const { saveLastRead, preferences, isLoaded, setSettingsOpen } = useReading();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   // 1. Save last read surah on mount
@@ -56,40 +55,35 @@ export const SurahReader: React.FC<SurahReaderProps> = ({ surah }) => {
   const nextSurah = surah.number < 114 ? STATIC_SURAHS.find(s => s.number === surah.number + 1) : null;
 
   // Render Bismillah logic
-  // Surah 1 (Fatiha) already has Bismillah as the first verse in the database.
-  // Surah 9 (Tevbe) does not start with Bismillah.
   const shouldShowBismillahHeader = surah.number !== 1 && surah.number !== 9;
 
   return (
-    <div className="w-full relative pb-24">
+    <div className="w-full relative pb-24 select-none">
       {/* Surah Header Card */}
-      <div className="bg-white dark:bg-brand-navy-card border border-slate-200/50 dark:border-slate-800/85 rounded-3xl p-6 md:p-8 mb-6 text-center shadow-sm relative overflow-hidden transition-all duration-300">
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-emerald-600 to-brand-emerald-800 dark:from-brand-emerald-500 dark:to-brand-emerald-700" />
+      <div className="bg-white dark:bg-brand-navy-card border border-slate-200/50 dark:border-slate-800/85 rounded-3xl p-6 md:p-8 mb-8 text-center shadow-sm relative overflow-hidden transition-all duration-300">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-emerald-600 to-brand-emerald-700 dark:from-brand-emerald-700 dark:to-brand-emerald-900" />
         
         <div className="flex items-center justify-center gap-2 text-xs font-semibold text-brand-emerald-700 dark:text-brand-emerald-400 uppercase tracking-widest font-sans mb-3">
           <BookOpen className="w-4 h-4" />
           <span>{surah.revelationType === 'Meccan' ? 'Mekki' : 'Medeni'} • {surah.numberOfAyahs} Ayet</span>
         </div>
 
-        <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-wide">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-wide font-sans">
           {surah.turkishName} Suresi
         </h1>
         <p className="text-slate-400 dark:text-slate-500 text-xs md:text-sm tracking-wide mt-1 font-sans">
           {surah.englishNameTranslation} ({surah.englishName})
         </p>
 
-        <p className="font-arabic text-3xl md:text-4xl text-brand-emerald-800 dark:text-brand-emerald-500 font-bold mt-5 tracking-wide">
+        <p className="font-arabic text-3xl md:text-4xl text-brand-emerald-600 dark:text-brand-emerald-500 font-bold mt-5 tracking-wide">
           {surah.name}
         </p>
       </div>
 
-      {/* Reading Options Panel */}
-      <ReadingSettings />
-
       {/* Bismillah Header */}
       {shouldShowBismillahHeader && preferences.showArabic && (
         <div className="text-center my-8 md:my-10 animate-fade-in">
-          <p className="font-arabic text-2xl md:text-3xl text-slate-800 dark:text-slate-100 leading-normal tracking-wide">
+          <p className="font-arabic text-2xl md:text-3xl text-slate-850 dark:text-slate-100 leading-normal tracking-wide">
             بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
           </p>
           {preferences.showTranslation && (
@@ -97,12 +91,12 @@ export const SurahReader: React.FC<SurahReaderProps> = ({ surah }) => {
               Rahmân ve Rahîm olan Allah&apos;ın ismiyle.
             </p>
           )}
-          <div className="w-16 h-0.5 bg-slate-200 dark:bg-slate-800 mx-auto mt-6 rounded-full" />
+          <div className="w-16 h-0.5 bg-slate-200/50 dark:bg-slate-800/80 mx-auto mt-6 rounded-full" />
         </div>
       )}
 
       {/* Verses Container */}
-      <div className="flex flex-col gap-4 mt-6">
+      <div className="flex flex-col gap-0 border-y border-slate-200/40 dark:border-slate-800/40 mt-6 bg-white dark:bg-brand-navy-card rounded-3xl overflow-hidden shadow-sm">
         {surah.ayahs.map((ayah) => (
           <AyahCard
             key={ayah.number}
@@ -114,14 +108,14 @@ export const SurahReader: React.FC<SurahReaderProps> = ({ surah }) => {
           />
         ))}
         {isLoaded && surah.ayahs.length === 0 && (
-          <div className="text-center py-12 bg-white dark:bg-brand-navy-card rounded-2xl border border-slate-200/50 dark:border-slate-800/80">
+          <div className="text-center py-12">
             <p className="text-slate-500 dark:text-slate-400 text-sm">Bu surenin ayetleri yüklenemedi. Lütfen internet bağlantınızı kontrol edin.</p>
           </div>
         )}
       </div>
 
       {/* Bottom Previous / Next Navigation */}
-      <div className="mt-10 pt-8 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-between gap-4 font-sans">
+      <div className="mt-10 pt-8 flex items-center justify-between gap-4 font-sans">
         {prevSurah ? (
           <Link
             href={`/surah/${prevSurah.number}`}
@@ -153,11 +147,21 @@ export const SurahReader: React.FC<SurahReaderProps> = ({ surah }) => {
         )}
       </div>
 
+      {/* Floating Settings Gear Button */}
+      <button
+        onClick={() => setSettingsOpen(true)}
+        className="fixed bottom-24 right-6 sm:right-8 z-45 p-3 rounded-xl bg-white dark:bg-brand-navy-card border border-slate-200/50 dark:border-slate-800/80 text-slate-500 hover:text-slate-800 dark:hover:text-white shadow-lg hover:shadow-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40"
+        title="Okuma Ayarları"
+        aria-label="Okuma ayarlarını aç"
+      >
+        <Settings className="w-5 h-5" />
+      </button>
+
       {/* Floating Scroll To Top Button */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-24 right-6 sm:right-8 z-45 p-3 rounded-xl bg-brand-emerald-600 hover:bg-brand-emerald-700 text-white shadow-lg shadow-brand-emerald-600/25 transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40 animate-fade-in"
+          className="fixed bottom-38 right-6 sm:right-8 z-45 p-3 rounded-xl bg-brand-emerald-600 hover:bg-brand-emerald-700 text-white shadow-lg shadow-brand-emerald-600/25 transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40 animate-fade-in"
           title="Yukarı Çık"
           aria-label="Sayfa başına dön"
         >

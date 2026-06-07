@@ -3,6 +3,7 @@ import { Amiri, Inter } from "next/font/google";
 import { ReadingProvider } from "@/components/ReadingContext";
 import { AudioPlayerProvider } from "@/components/AudioPlayerContext";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { ReadingSettings } from "@/components/ReadingSettings";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
@@ -41,6 +42,7 @@ export default function RootLayout({
           <AudioPlayerProvider>
             {children}
             <AudioPlayer />
+            <ReadingSettings />
             <Analytics />
           </AudioPlayerProvider>
         </ReadingProvider>

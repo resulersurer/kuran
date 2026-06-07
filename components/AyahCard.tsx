@@ -63,7 +63,6 @@ export const AyahCard: React.FC<AyahCardProps> = ({
     saveLastRead(surahId, ayah.numberInSurah, surahName, surahTurkishName);
   };
 
-  // Line spacing class mappings
   const lineSpacingClass = 
     preferences.lineSpacing === 'normal' 
       ? 'leading-relaxed' 
@@ -75,88 +74,89 @@ export const AyahCard: React.FC<AyahCardProps> = ({
     <div
       id={`ayah-${ayah.numberInSurah}`}
       onClick={handleCardClick}
-      className={`group relative overflow-hidden bg-white dark:bg-brand-navy-card border rounded-2xl p-5 md:p-6 transition-all duration-300 cursor-pointer select-none ${
+      className={`group relative py-8 px-5 md:px-8 border-b border-slate-100 dark:border-slate-800/60 transition-all duration-300 cursor-pointer select-none ${
         isActive
-          ? 'border-brand-emerald-600 dark:border-brand-emerald-500 bg-brand-emerald-50/10 dark:bg-brand-emerald-950/10 shadow-lg shadow-brand-emerald-600/[0.04] ring-1 ring-brand-emerald-600/20 animate-glow'
-          : 'border-slate-200/60 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md'
+          ? 'bg-brand-emerald-500/[0.04] dark:bg-brand-emerald-500/[0.03] border-brand-emerald-500/30'
+          : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20'
       }`}
     >
-      <div className="flex flex-col gap-5">
-        {/* Top bar: Ayah Number, Action Buttons */}
-        <div className="flex items-center justify-between gap-4">
-          {/* Ayah Index Circle */}
-          <div className={`w-8 h-8 rounded-lg font-mono text-[13px] font-bold flex items-center justify-center border transition-colors duration-200 ${
+      <div className="flex flex-col md:flex-row gap-6 items-start">
+        {/* Left Actions Sidebar (Desktop: vertical, Mobile: horizontal top bar) */}
+        <div className="flex flex-row md:flex-col items-center justify-between md:justify-start gap-4 w-full md:w-auto md:min-w-[70px] md:pt-1">
+          {/* Verse key badge: e.g. 2:5 */}
+          <span className={`text-[12px] font-bold tracking-wide font-sans md:text-center block border border-slate-200/50 dark:border-slate-850 rounded-lg px-2.5 py-1 md:py-1.5 md:w-full select-none transition-colors duration-200 ${
             isActive
-              ? 'bg-brand-emerald-600 border-brand-emerald-600 text-white'
-              : 'bg-slate-50 dark:bg-slate-800 border-slate-200/50 dark:border-slate-700/60 text-slate-500 dark:text-slate-400'
+              ? 'bg-brand-emerald-600 border-brand-emerald-600 text-white shadow-sm'
+              : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200/35 dark:border-slate-800/35 text-slate-500 dark:text-slate-400'
           }`}>
-            {ayah.numberInSurah}
-          </div>
+            {surahId}:{ayah.numberInSurah}
+          </span>
 
-          {/* Quick Action Bar */}
-          <div className="flex items-center gap-1">
-            {/* Copy Button */}
-            <button
-              onClick={handleCopy}
-              className={`p-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/30 ${
-                copied
-                  ? 'text-brand-emerald-600 bg-brand-emerald-50 dark:bg-brand-emerald-950/20'
-                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-              title="Ayet Kopyala"
-            >
-              {copied ? <Check className="w-4.5 h-4.5 animate-scale-up" /> : <Copy className="w-4.5 h-4.5" />}
-            </button>
-
-            {/* Bookmark Button */}
-            <button
-              onClick={handleBookmarkToggle}
-              className={`p-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/30 ${
-                isBookmarkedAyah
-                  ? 'text-brand-gold-600 bg-brand-gold-50 dark:bg-brand-gold-950/20 hover:bg-brand-gold-100/50'
-                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-              title={isBookmarkedAyah ? 'Favorilerden Çıkar' : 'Favorilere Ekle'}
-            >
-              {isBookmarkedAyah ? <BookmarkCheck className="w-4.5 h-4.5 text-amber-500 fill-amber-500" /> : <Bookmark className="w-4.5 h-4.5" />}
-            </button>
-
-            {/* Audio Play/Pause Button */}
+          {/* Action triggers */}
+          <div className="flex md:flex-col items-center gap-1">
+            {/* Audio playback */}
             {ayah.audio && (
               <button
                 onClick={handlePlayToggle}
-                className={`p-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/30 ${
+                className={`p-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40 ${
                   isActive && isPlaying
                     ? 'text-white bg-brand-emerald-600 hover:bg-brand-emerald-700'
                     : 'text-brand-emerald-600 dark:text-brand-emerald-400 hover:bg-brand-emerald-50 dark:hover:bg-brand-emerald-950/20'
                 }`}
                 title={isActive && isPlaying ? 'Durdur' : 'Sesli Dinle'}
               >
-                {isActive && isPlaying ? <Pause className="w-4.5 h-4.5" /> : <Play className="w-4.5 h-4.5 fill-current" />}
+                {isActive && isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
               </button>
             )}
+
+            {/* Bookmark */}
+            <button
+              onClick={handleBookmarkToggle}
+              className={`p-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40 ${
+                isBookmarkedAyah
+                  ? 'text-brand-gold-600 bg-brand-gold-50 dark:bg-brand-gold-950/20 hover:bg-brand-gold-100/50'
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50'
+              }`}
+              title={isBookmarkedAyah ? 'Favorilerden Çıkar' : 'Favorilere Ekle'}
+            >
+              {isBookmarkedAyah ? <BookmarkCheck className="w-4 h-4 text-amber-500 fill-amber-500" /> : <Bookmark className="w-4 h-4" />}
+            </button>
+
+            {/* Copy clip */}
+            <button
+              onClick={handleCopy}
+              className={`p-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-600/40 ${
+                copied
+                  ? 'text-brand-emerald-600 bg-brand-emerald-50 dark:bg-brand-emerald-950/20'
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50'
+              }`}
+              title="Ayet Kopyala"
+            >
+              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
-        {/* Text Area */}
-        <div className="flex flex-col gap-4">
-          {/* Arabic Verse */}
+        {/* Right Side content */}
+        <div className="flex-grow flex flex-col gap-6 w-full">
+          {/* Arabic Text */}
           {preferences.showArabic && (
             <p
-              className={`arabic-text font-arabic leading-loose tracking-wide text-right select-all select-none text-slate-800 dark:text-slate-100 ${lineSpacingClass}`}
+              className={`arabic-text font-arabic leading-loose tracking-wide text-right select-all text-slate-800 dark:text-slate-100 ${lineSpacingClass}`}
               style={{ fontSize: `${preferences.fontSizeArabic}px` }}
             >
               {ayah.text}
             </p>
           )}
 
-          {/* Turkish translation */}
+          {/* Translation Text */}
           {preferences.showTranslation && (
             <div 
-              className="font-sans leading-relaxed text-slate-600 dark:text-slate-300 font-medium select-all"
+              className="font-sans leading-relaxed text-slate-600 dark:text-slate-350 select-all"
               style={{ fontSize: `${preferences.fontSizeTranslation}px` }}
             >
-              <p>{ayah.translation}</p>
+              <p className="leading-[1.7]">{ayah.translation}</p>
+              <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block mt-2.5">DİYANET VAKFI MEALİ</span>
             </div>
           )}
         </div>

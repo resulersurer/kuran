@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { ReadingPreferences, Bookmark, LastRead } from '@/types/quran';
 import { getJsonStorageItem, setJsonStorageItem, safeLocalStorage } from '@/lib/storage';
 
@@ -16,6 +16,8 @@ interface ReadingContextType {
   lastRead: LastRead | null;
   saveLastRead: (surahId: number, ayahNumber: number, surahName: string, surahTurkishName: string) => void;
   isLoaded: boolean; // Tells components when localStorage has been read
+  isSettingsOpen: boolean;
+  setSettingsOpen: (open: boolean) => void;
 }
 
 const defaultPreferences: ReadingPreferences = {
@@ -34,6 +36,7 @@ export const ReadingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [lastRead, setLastRead] = useState<LastRead | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   // Load from localStorage on mount (prevents hydration mismatch)
   useEffect(() => {
@@ -111,17 +114,22 @@ export const ReadingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return bookmarks.some(b => b.surahId === surahId && b.ayahNumber === ayahNumber);
   };
 
-  const saveLastRead = (surahId: number, ayahNumber: number, surahName: string, surahTurkishName: string) => {
-    const nextLastRead: LastRead = {
-      surahId,
-      ayahNumber,
-      surahName,
-      surahTurkishName,
-      timestamp: Date.now(),
-    };
-    setLastRead(nextLastRead);
-    setJsonStorageItem('quran-last-read', nextLastRead);
-  };
+  const saveLastRead = useCallback((surahId: number, ayahNumber: number, surahName: string, surahTurkishName: string) => {
+    setLastRead(prev => {
+      if (prev && prev.surahId === surahId && prev.ayahNumber === ayahNumber) {
+        return prev;
+      }
+      const nextLastRead: LastRead = {
+        surahId,
+        ayahNumber,
+        surahName,
+        surahTurkishName,
+        timestamp: Date.now(),
+      };
+      setJsonStorageItem('quran-last-read', nextLastRead);
+      return nextLastRead;
+    });
+  }, []);
 
   return (
     <ReadingContext.Provider
@@ -137,6 +145,8 @@ export const ReadingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         lastRead,
         saveLastRead,
         isLoaded,
+        isSettingsOpen,
+        setSettingsOpen,
       }}
     >
       {children}

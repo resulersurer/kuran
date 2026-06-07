@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-cream-50: #FAF7F2;
+  --color-brand-cream-50: #FCFCFA;
   --color-brand-cream-100: #F3ECE0;
   --color-brand-emerald-50: #F0FDF4;
-  --color-brand-emerald-100: #DCFCE7;
-  --color-brand-emerald-600: #16A34A;
-  --color-brand-emerald-700: #15803D;
-  --color-brand-emerald-800: #166534;
-  --color-brand-emerald-950: #022C22;
+  --color-brand-emerald-100: #E6F7F4;
+  --color-brand-emerald-600: #2ca58d;
+  --color-brand-emerald-700: #1f7d6a;
+  --color-brand-emerald-800: #165c4e;
+  --color-brand-emerald-950: #06241e;
   
   --color-brand-gold-50: #FFFDF5;
   --color-brand-gold-100: #FEF9C3;
   --color-brand-gold-500: #D97706;
   --color-brand-gold-600: #B45309;
   
-  --color-brand-navy-900: #0F172A;
-  --color-brand-navy-950: #090D1A;
-  --color-brand-navy-card: #1E293B;
+  --color-brand-navy-900: #0f121d;
+  --color-brand-navy-950: #080a12;
+  --color-brand-navy-card: #101524;
 
   --font-arabic: var(--font-amiri), serif;
   --font-sans: var(--font-inter), sans-serif;
@@ -38,25 +38,25 @@
 }
 
 @keyframes glow {
-  0%, 100% { border-color: rgba(22, 163, 74, 0.2); box-shadow: 0 0 4px rgba(22, 163, 74, 0.1); }
-  50% { border-color: rgba(22, 163, 74, 0.6); box-shadow: 0 0 12px rgba(22, 163, 74, 0.3); }
+  0%, 100% { border-color: rgba(44, 165, 141, 0.2); box-shadow: 0 0 4px rgba(44, 165, 141, 0.1); }
+  50% { border-color: rgba(44, 165, 141, 0.6); box-shadow: 0 0 12px rgba(44, 165, 141, 0.3); }
 }
 
 /* Light / Dark Mode root colors */
 :root {
-  --background: #FAF7F2;
-  --foreground: #1E293B;
+  --background: #FCFCFA;
+  --foreground: #1F2937;
   --card: #FFFFFF;
-  --card-foreground: #1E293B;
-  --border: #E5E7EB;
+  --card-foreground: #1F2937;
+  --border: #F3F4F6;
 }
 
 .dark {
-  --background: #090D1A;
-  --foreground: #F1F5F9;
-  --card: #131B2E;
-  --card-foreground: #F1F5F9;
-  --border: #1E293B;
+  --background: #080a12;
+  --foreground: #E5E7EB;
+  --card: #101524;
+  --card-foreground: #E5E7EB;
+  --border: #1f293d;
 }
 
 body {
