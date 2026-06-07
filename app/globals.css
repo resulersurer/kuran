@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-cream-50: #FAF7F2;
+  --color-brand-cream-100: #F3ECE0;
+  --color-brand-emerald-50: #F0FDF4;
+  --color-brand-emerald-100: #DCFCE7;
+  --color-brand-emerald-600: #16A34A;
+  --color-brand-emerald-700: #15803D;
+  --color-brand-emerald-800: #166534;
+  --color-brand-emerald-950: #022C22;
+  
+  --color-brand-gold-50: #FFFDF5;
+  --color-brand-gold-100: #FEF9C3;
+  --color-brand-gold-500: #D97706;
+  --color-brand-gold-600: #B45309;
+  
+  --color-brand-navy-900: #0F172A;
+  --color-brand-navy-950: #090D1A;
+  --color-brand-navy-card: #1E293B;
+
+  --font-arabic: var(--font-amiri), serif;
+  --font-sans: var(--font-inter), sans-serif;
+  
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-up: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-glow: glow 2s infinite ease-in-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes glow {
+  0%, 100% { border-color: rgba(22, 163, 74, 0.2); box-shadow: 0 0 4px rgba(22, 163, 74, 0.1); }
+  50% { border-color: rgba(22, 163, 74, 0.6); box-shadow: 0 0 12px rgba(22, 163, 74, 0.3); }
+}
+
+/* Light / Dark Mode root colors */
+:root {
+  --background: #FAF7F2;
+  --foreground: #1E293B;
+  --card: #FFFFFF;
+  --card-foreground: #1E293B;
+  --border: #E5E7EB;
+}
+
+.dark {
+  --background: #090D1A;
+  --foreground: #F1F5F9;
+  --card: #131B2E;
+  --card-foreground: #F1F5F9;
+  --border: #1E293B;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.4);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+/* Quranic Arabic styling utilities */
+.arabic-text {
+  font-family: var(--font-arabic);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .glass-panel {
+  background: rgba(19, 27, 46, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 41, 59, 0.6);
+}
